@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+.turbo
+.env
+.env.*
+!.env.example
+**/*.spec.ts
+**/__snapshots__
+test
+README.md
+Dockerfile
+.dockerignore

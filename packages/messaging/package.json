@@ -1,0 +1,39 @@
+{
+  "name": "@app/messaging",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint src --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@app/contracts": "workspace:*",
+    "@app/errors": "workspace:*",
+    "@app/logger": "workspace:*",
+    "amqp-connection-manager": "^4.1.14",
+    "amqplib": "^0.10.4",
+    "pino": "^9.4.0",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^10.4.0",
+    "@nestjs/core": "^10.4.0"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^10.4.5",
+    "@nestjs/core": "^10.4.5",
+    "@types/amqplib": "^0.10.5",
+    "@types/node": "^22.7.5",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.2"
+  }
+}

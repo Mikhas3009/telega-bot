@@ -1,0 +1,80 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Event schema snapshots > schema for notification.send.v1 matches snapshot 1`] = `
+{
+  "$ref": "#/definitions/notification.send.v1",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "notification.send.v1": {
+      "additionalProperties": false,
+      "properties": {
+        "channel": {
+          "enum": [
+            "telegram",
+          ],
+          "type": "string",
+        },
+        "recipient": {
+          "additionalProperties": false,
+          "properties": {
+            "chatId": {
+              "minLength": 1,
+              "type": "string",
+            },
+          },
+          "type": "object",
+        },
+        "template": {
+          "minLength": 1,
+          "type": "string",
+        },
+        "variables": {
+          "additionalProperties": {
+            "type": "string",
+          },
+          "default": {},
+          "type": "object",
+        },
+      },
+      "required": [
+        "channel",
+        "recipient",
+        "template",
+      ],
+      "type": "object",
+    },
+  },
+}
+`;
+
+exports[`Event schema snapshots > schema for user.registered.v1 matches snapshot 1`] = `
+{
+  "$ref": "#/definitions/user.registered.v1",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "user.registered.v1": {
+      "additionalProperties": false,
+      "properties": {
+        "email": {
+          "format": "email",
+          "type": "string",
+        },
+        "registeredAt": {
+          "format": "date-time",
+          "type": "string",
+        },
+        "userId": {
+          "format": "uuid",
+          "type": "string",
+        },
+      },
+      "required": [
+        "userId",
+        "email",
+        "registeredAt",
+      ],
+      "type": "object",
+    },
+  },
+}
+`;

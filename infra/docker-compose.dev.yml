@@ -1,0 +1,36 @@
+name: event-microservices
+
+services:
+  producer-service:
+    build:
+      target: dev
+    volumes:
+      - ../apps/producer-service/src:/app/apps/producer-service/src
+      - ../packages:/app/packages
+    command: ['pnpm', '--filter', 'producer-service', 'dev']
+    environment:
+      LOG_PRETTY: 'true'
+
+  consumer-service:
+    build:
+      target: dev
+    volumes:
+      - ../apps/consumer-service/src:/app/apps/consumer-service/src
+      - ../packages:/app/packages
+    command: ['pnpm', '--filter', 'consumer-service', 'dev']
+    ports:
+      - '3001:3001'
+    environment:
+      LOG_PRETTY: 'true'
+
+  notification-service:
+    build:
+      target: dev
+    volumes:
+      - ../apps/notification-service/src:/app/apps/notification-service/src
+      - ../packages:/app/packages
+    command: ['pnpm', '--filter', 'notification-service', 'dev']
+    ports:
+      - '3002:3002'
+    environment:
+      LOG_PRETTY: 'true'

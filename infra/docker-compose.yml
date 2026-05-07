@@ -1,0 +1,113 @@
+name: event-microservices
+
+x-service-defaults: &service-defaults
+  restart: unless-stopped
+  init: true
+
+services:
+  rabbitmq:
+    <<: *service-defaults
+    image: rabbitmq:3.13-management-alpine
+    hostname: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-guest}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-guest}
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks: [events-net]
+
+  redis:
+    <<: *service-defaults
+    image: redis:7.4-alpine
+    command:
+      - redis-server
+      - --appendonly
+      - 'yes'
+      - --maxmemory
+      - 256mb
+      - --maxmemory-policy
+      - allkeys-lru
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks: [events-net]
+
+  producer-service:
+    <<: *service-defaults
+    build:
+      context: ..
+      dockerfile: apps/producer-service/Dockerfile
+      target: runner
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - '3000:3000'
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks: [events-net]
+
+  consumer-service:
+    <<: *service-defaults
+    build:
+      context: ..
+      dockerfile: apps/consumer-service/Dockerfile
+      target: runner
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+      REDIS_URL: redis://redis:6379
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks: [events-net]
+
+  notification-service:
+    <<: *service-defaults
+    build:
+      context: ..
+      dockerfile: apps/notification-service/Dockerfile
+      target: runner
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-guest}:${RABBITMQ_PASSWORD:-guest}@rabbitmq:5672
+      REDIS_URL: redis://redis:6379
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_DEFAULT_CHAT_ID: ${TELEGRAM_DEFAULT_CHAT_ID}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks: [events-net]
+
+volumes:
+  rabbitmq-data:
+  redis-data:
+
+networks:
+  events-net:
+    driver: bridge
