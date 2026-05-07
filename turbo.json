@@ -2,13 +2,7 @@
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["tsconfig.base.json", ".env.example"],
   "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**"],
-      "inputs": ["src/**", "tsconfig.json", "package.json"]
-    },
     "typecheck": {
-      "dependsOn": ["^build"],
       "outputs": ["*.tsbuildinfo"],
       "inputs": ["src/**", "test/**", "tsconfig.json", "../../tsconfig.base.json"]
     },
@@ -17,17 +11,14 @@
       "inputs": ["src/**", "test/**", "../../eslint.config.mjs"]
     },
     "test": {
-      "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "inputs": ["src/**", "test/**", "vitest.config.ts"]
     },
     "test:integration": {
-      "dependsOn": ["^build"],
       "outputs": [],
       "inputs": ["src/**", "test/**", "vitest.integration.config.ts"]
     },
     "test:e2e": {
-      "dependsOn": ["^build"],
       "outputs": [],
       "inputs": ["src/**", "test/**", "vitest.config.ts", "vitest.e2e.config.ts"]
     },

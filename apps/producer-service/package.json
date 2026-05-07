@@ -6,8 +6,7 @@
   "main": "./dist/main.js",
   "scripts": {
     "dev": "tsx watch src/main.ts",
-    "build": "tsc -p tsconfig.build.json",
-    "start": "node dist/main.js",
+    "start": "node --import @swc-node/register/esm-register src/main.ts",
     "lint": "eslint src test --max-warnings 0 --no-error-on-unmatched-pattern",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

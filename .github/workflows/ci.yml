@@ -125,24 +125,9 @@ jobs:
       - run: pnpm --filter producer-service test:e2e
       - run: pnpm --filter e2e test:e2e
 
-  build:
-    name: Build all packages
-    needs: [lint, typecheck]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with: { version: '${{ env.PNPM_VERSION }}' }
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '${{ env.NODE_VERSION }}'
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm turbo run build
-
   docker-build:
     name: Docker build (${{ matrix.service }})
-    needs: build
+    needs: [lint, typecheck]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

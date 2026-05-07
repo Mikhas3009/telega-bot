@@ -1,7 +1,5 @@
 # event-microservices
 
-
-
 ## Запуск
 
 ```bash
@@ -13,6 +11,9 @@ cp .env.example .env
 
 # Запустить
 docker compose -f infra/docker-compose.yml up --build
+
+# Установить зависимости (опц, для работы pre-commit скриптов)
+pnpm install
 
 # Отправить событие
 curl -X POST http://localhost:3000/events \
@@ -36,4 +37,3 @@ curl -X POST http://localhost:3000/events \
     }
 }
 ```
-

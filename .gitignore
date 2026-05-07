@@ -5,6 +5,16 @@ dist/
 build/
 *.tsbuildinfo
 
+# Stray TS emit next to source — production runs via @swc-node/register, no compile step
+packages/**/src/**/*.js
+packages/**/src/**/*.js.map
+packages/**/src/**/*.d.ts
+packages/**/src/**/*.d.ts.map
+apps/**/src/**/*.js
+apps/**/src/**/*.js.map
+apps/**/src/**/*.d.ts
+apps/**/src/**/*.d.ts.map
+
 coverage/
 .vitest-cache/
 
